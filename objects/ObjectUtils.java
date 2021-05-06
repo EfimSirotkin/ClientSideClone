@@ -235,6 +235,17 @@ public class ObjectUtils {
         return false;
     }
 
+    public static ArrayList<Subject> constructSubjectsList(String[] subjectsArray) {
+        ArrayList<Subject> tempSubjectsList = new ArrayList<Subject>(5);
+        for(String oneSubject : subjectsArray) {
+            Subject tempSubject = ObjectUtils.findSubjectByName(Main.schoolSubjects, oneSubject);
+            if(tempSubject != null) {
+                tempSubjectsList.add(tempSubject);
+            }
+        }
+        return tempSubjectsList;
+    }
+
 
 }
 

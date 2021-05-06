@@ -13,7 +13,10 @@ import javafx.stage.Window;
 import sample.Main;
 import sample.excel.ClassGradesImporter;
 import sample.excel.ClassPupilsImporter;
+import sample.excel.TeachersImporter;
+import sample.json.deserializer.TeacherDeserializer;
 import sample.objects.Grade;
+import sample.objects.Teacher;
 import sample.popups.AlertWarner;
 import sample.popups.GradePopup;
 
@@ -151,15 +154,7 @@ public class ImportExportScreenController implements Initializable, ControlledSc
 
     }
 
-    public void onImportGradesButtonClicked() throws InterruptedException {
-
-//        GradePopup classSelectionPopup = new GradePopup();
-//        classSelectionPopup.generateLayout();
-//        GradePopup.customPopup.show(Window.getWindows().get(0));
-//
-//        String gradesAbsolutePath = getSelectedFilePath("Выберите файл с информацией об отметках");
-//        String scheduleAbsolutePath = getSelectedFilePath("Выберите файл с расписанием занятий");
-//        ClassGradesImporter classGradesImporter = new ClassGradesImporter();
+    public void onImportGradesButtonClicked() {
 
         gradesFileAbsolutePath = getSelectedFilePath("Выберите файл с информацией об отметках");
         scheduleFileAbsolutePath = getSelectedFilePath("Выберите файл с расписанием занятий");
@@ -168,8 +163,27 @@ public class ImportExportScreenController implements Initializable, ControlledSc
         classSelectionPopup.generateLayout();
         GradePopup.customPopup.show(Window.getWindows().get(0));
 
+    }
 
+    public void onImportTeachersButtonClicked() {
+        String absolutePath = getSelectedFilePath("Выберите файл с информацией об учителях:");
+        TeachersImporter teachersImporter = new TeachersImporter();
+
+        if(!absolutePath.isEmpty()) {
+            boolean isDuplicateFound = teachersImporter.importTemplate(absolutePath);
+            if (isDuplicateFound) {
+                AlertWarner.showAlert("Пустые ячейки", "В выбранном файле содержатся пустые ячейки", "Соответствующие записи не добавлены", Alert.AlertType.ERROR);
+            } else {
+                AlertWarner.showAlert("Успешно", "Операция выполнена", "Информация об учителях успешно добавлена", Alert.AlertType.WARNING);
+            }
+        }
+        else {
+            AlertWarner.showAlert("Отмена", "Операция отменена", "Информация об учителях не добавлена", Alert.AlertType.INFORMATION);
+        }
+        for(Teacher oneTeacher: Main.teachers)
+            oneTeacher.printTeacher();
 
     }
+
 
 }

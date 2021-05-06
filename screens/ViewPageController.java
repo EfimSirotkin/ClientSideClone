@@ -163,6 +163,6 @@ public class ViewPageController implements Initializable, ControlledScreen {
         PupilPopup pupilPopup = new PupilPopup();
         String selectedName = pupilTable.getSelectionModel().getSelectedItem().getFullName();
         pupilPopup.generatePopup(ObjectUtils.findPupilByName(Main.pupils, selectedName));
-        pupilPopup.getCustomPopup().show(Window.getWindows().get(0));
+        PupilPopup.customPopup.show(Window.getWindows().get(0));
     }
 }

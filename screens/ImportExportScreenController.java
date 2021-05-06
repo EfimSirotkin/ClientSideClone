@@ -8,9 +8,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import sample.Main;
+import sample.excel.ClassGradesImporter;
 import sample.excel.ClassPupilsImporter;
+import sample.objects.Grade;
 import sample.popups.AlertWarner;
+import sample.popups.GradePopup;
 
 import java.io.File;
 import java.net.URL;
@@ -47,6 +52,12 @@ public class ImportExportScreenController implements Initializable, ControlledSc
 
     @FXML
     private Button returnButton;
+
+    public static String gradesFileAbsolutePath;
+    public static String scheduleFileAbsolutePath;
+    public static String classNumber;
+    public static boolean isGradesDuplicate = false;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -112,26 +123,53 @@ public class ImportExportScreenController implements Initializable, ControlledSc
         button.setStyle("-fx-background-color: #66CC99");
     }
 
-    public void onImportPupilsButtonClicked() {
-        ClassPupilsImporter classPupilsImporter = new ClassPupilsImporter();
+    private String getSelectedFilePath(String dialogTitle) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Выберите файл с информацией об учащихся");
+        fileChooser.setTitle(dialogTitle);
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("xls Files", "*.xls"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         File selectedFile = fileChooser.showOpenDialog(null);
-        String absolutePath = selectedFile.getAbsolutePath();
+        if(selectedFile != null)
+            return selectedFile.getAbsolutePath();
+        else
+            return "";
+
+    }
+
+    public void onImportPupilsButtonClicked() {
+        ClassPupilsImporter classPupilsImporter = new ClassPupilsImporter();
+        String absolutePath = getSelectedFilePath("Выберите файл с информацией об обучающихся");
+
         boolean isDuplicate = false;
         isDuplicate = classPupilsImporter.importTemplate(absolutePath);
-        if(isDuplicate) {
+        if (isDuplicate) {
             AlertWarner.showAlert("Дубликаты", "В выбранном файле содержатся дубликаты", "Соответствующие записи не добавлены", Alert.AlertType.WARNING);
-        }
-        else {
-            AlertWarner.showAlert("Успешно","Операция выполнена", "Информация об обучающихся успешно добавлена", Alert.AlertType.INFORMATION);
+        } else {
+            AlertWarner.showAlert("Успешно", "Операция выполнена", "Информация об обучающихся успешно добавлена", Alert.AlertType.INFORMATION);
         }
 
     }
 
+    public void onImportGradesButtonClicked() throws InterruptedException {
 
+//        GradePopup classSelectionPopup = new GradePopup();
+//        classSelectionPopup.generateLayout();
+//        GradePopup.customPopup.show(Window.getWindows().get(0));
+//
+//        String gradesAbsolutePath = getSelectedFilePath("Выберите файл с информацией об отметках");
+//        String scheduleAbsolutePath = getSelectedFilePath("Выберите файл с расписанием занятий");
+//        ClassGradesImporter classGradesImporter = new ClassGradesImporter();
+
+        gradesFileAbsolutePath = getSelectedFilePath("Выберите файл с информацией об отметках");
+        scheduleFileAbsolutePath = getSelectedFilePath("Выберите файл с расписанием занятий");
+
+        GradePopup classSelectionPopup = new GradePopup();
+        classSelectionPopup.generateLayout();
+        GradePopup.customPopup.show(Window.getWindows().get(0));
+
+
+
+    }
 
 }

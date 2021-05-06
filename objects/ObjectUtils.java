@@ -219,6 +219,22 @@ public class ObjectUtils {
         return false;
     }
 
+    public static boolean isDuplicateGradesPresent(ArrayList<Grade> sourceList, ArrayList<Grade> compareList) {
+        for(Grade oneCompareGrade : compareList) {
+            for(Grade oneSourceGrade : sourceList) {
+                boolean datesEqual = oneCompareGrade.getDateTime().equals(oneSourceGrade.getDateTime());
+                if(datesEqual) {
+                    boolean valuesEqual = oneCompareGrade.getValue() == oneSourceGrade.getValue();
+                    boolean subjectsEqual = oneCompareGrade.getSubjectID() == oneSourceGrade.getSubjectID();
+                    boolean pupilEqual = oneCompareGrade.getPupilID() == oneSourceGrade.getPupilID();
+                    if(valuesEqual && subjectsEqual && pupilEqual)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 }
 

@@ -67,7 +67,7 @@ public class ClassSubjectsImporter implements Importer{
             if (workbook != null) {
                 workbook.close();
             }
-        return true;
         }
+        return true;
     }
 }

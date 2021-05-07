@@ -13,12 +13,14 @@ import javafx.stage.Window;
 import sample.Main;
 import sample.excel.ClassGradesImporter;
 import sample.excel.ClassPupilsImporter;
+import sample.excel.ClassSubjectsImporter;
 import sample.excel.TeachersImporter;
 import sample.json.deserializer.TeacherDeserializer;
 import sample.objects.Grade;
 import sample.objects.Teacher;
 import sample.popups.AlertWarner;
 import sample.popups.GradePopup;
+import sample.popups.ServerUpdatePopup;
 
 import java.io.File;
 import java.net.URL;
@@ -51,6 +53,12 @@ public class ImportExportScreenController implements Initializable, ControlledSc
 
     @FXML
     private ImageView scheduleImageView;
+
+    @FXML
+    private ImageView serverImageView;
+
+    @FXML
+    private ImageView databaseImageView;
 
 
     @FXML
@@ -95,6 +103,14 @@ public class ImportExportScreenController implements Initializable, ControlledSc
         File scheduleFile = new File("res\\ImportExport\\schedule.jpg");
         Image scheduleImage = new Image(scheduleFile.toURI().toString());
         scheduleImageView.setImage(scheduleImage);
+
+        File serverFile = new File("res\\ImportExport\\server.jpg");
+        Image serverImage = new Image(serverFile.toURI().toString());
+        serverImageView.setImage(serverImage);
+
+        File databaseFile = new File("res\\ImportExport\\database-storage.jpg");
+        Image databaseImage = new Image(databaseFile.toURI().toString());
+        databaseImageView.setImage(databaseImage);
 
 
     }
@@ -183,6 +199,27 @@ public class ImportExportScreenController implements Initializable, ControlledSc
         for(Teacher oneTeacher: Main.teachers)
             oneTeacher.printTeacher();
 
+    }
+
+    public void onImportClassSubjectsButtonClicked() {
+        String absolutePath = getSelectedFilePath("Выберите файл с информацией об учебных предметах по классам");
+        ClassSubjectsImporter classSubjectsImporter = new ClassSubjectsImporter();
+
+        if(!absolutePath.isEmpty()) {
+            if(classSubjectsImporter.importTemplate(absolutePath)) {
+                AlertWarner.showAlert("Успешно", "Операция выполнена", "Информация об учителях успешно добавлена", Alert.AlertType.WARNING);
+            }
+
+        }
+        else {
+            AlertWarner.showAlert("Отмена", "Операция отменена", "Информация об учителях не добавлена", Alert.AlertType.INFORMATION);
+        }
+    }
+
+    public void onUpdateServerButtonClicked() {
+        ServerUpdatePopup serverUpdatePopup = new ServerUpdatePopup();
+        serverUpdatePopup.generateLayout();
+        ServerUpdatePopup.customPopup.show(Window.getWindows().get(0));
     }
 
 

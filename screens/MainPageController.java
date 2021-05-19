@@ -103,4 +103,7 @@ public class MainPageController implements Initializable, ControlledScreen{
 
     @FXML
     private void onImportExportButtonClicked() { myController.setScreen(Main.importExportScreenID); }
+
+    @FXML
+    private void onAnalyticsPageButtonClicked() { myController.setScreen(Main.analyticsScreenID);}
 }

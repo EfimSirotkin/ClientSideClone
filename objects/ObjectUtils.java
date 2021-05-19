@@ -136,13 +136,13 @@ public class ObjectUtils {
         return null;
     }
 
-    public static double calculateAverageForClass(ArrayList<Pupil> classList) {
+    public static double calculateAverageForClass(ArrayList<Pupil> classPupilsList) {
         double averagePoint = 0.0;
 
-        for (Pupil onePupil : classList)
+        for (Pupil onePupil : classPupilsList)
             averagePoint += calculateAverageForPupil(onePupil);
 
-        return averagePoint / classList.size();
+        return averagePoint / classPupilsList.size();
     }
 
     public static double calculateAverageForPupil(Pupil onePupil) {
@@ -246,6 +246,60 @@ public class ObjectUtils {
         return tempSubjectsList;
     }
 
+    public static ArrayList<Integer> getGradesAsInteger() {
+        ArrayList<Integer> tempList = new ArrayList<Integer>(5);
+        for(SchoolClass oneClass : Main.schoolClassArrayList) {
+            ArrayList<Pupil> currentClassPupils = ObjectUtils.findPupilsByClass(Main.pupils, oneClass.getId());
+            tempList.addAll(getClassGradesAsInteger(currentClassPupils));
+        }
+        return tempList;
+    }
+
+    public static ArrayList<Integer> getClassGradesAsInteger(ArrayList<Pupil> classPupils) {
+        ArrayList<Integer> tempList = new ArrayList<Integer>(5);
+        for (Pupil onePupil : classPupils) {
+            tempList.addAll(getPupilsGradesAsIntegers(onePupil));
+        }
+        return tempList;
+    }
+
+    public static ArrayList<Integer> getPupilsGradesAsIntegers(Pupil onePupil) {
+        ArrayList<Integer> tempList = new ArrayList<Integer>(5);
+        for(Grade oneGrade : onePupil.getPupilGrades()) {
+            tempList.add(oneGrade.getValue());
+        }
+        return tempList;
+    }
+
+    public static ArrayList<Integer> getClassPupilsSubjectGrades(ArrayList<Pupil> classPupils, Subject selectedSubject) {
+        ArrayList<Integer> tempList = new ArrayList<>(5);
+
+        for(Pupil onePupil : classPupils) {
+            ArrayList<Grade> currentPupilGrades = onePupil.getPupilGrades();
+            for(Grade oneGrade : ObjectUtils.getSubjectGrades(currentPupilGrades,selectedSubject.getSubjectName())) {
+                tempList.add(oneGrade.getValue());
+            }
+        }
+        return tempList;
+    }
+
+    public static double calculateAverageForClassSubject(ArrayList<Pupil> classPupils, Subject subject) {
+        double average = 0.0;
+        for(Pupil onePupil : classPupils) {
+            average += calculateAverageForSubject(onePupil, subject);
+        }
+        return (double) average / classPupils.size();
+    }
+
+    public static ArrayList<Integer> getGeneralPupilsSubjectGrades(Subject selectedSubject) {
+        ArrayList<Integer> generalSubjectGrades = new ArrayList<Integer>(5);
+
+        for(SchoolClass oneClass : Main.schoolClassArrayList) {
+            ArrayList<Pupil> currentClassPupils = ObjectUtils.findPupilsByClass(Main.pupils, oneClass.getId());
+            generalSubjectGrades.addAll(getClassPupilsSubjectGrades(currentClassPupils, selectedSubject));
+        }
+        return generalSubjectGrades;
+    }
 
 }
 

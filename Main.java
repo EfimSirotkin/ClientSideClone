@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sample.excel.ClassGradesImporter;
-import sample.excel.ClassPupilsImporter;
-import sample.excel.ClassSubjectsImporter;
-import sample.excel.DatetimeGradesImporter;
+import sample.excel.*;
 import sample.http.GetGenerator;
 import sample.http.PostGenerator;
 import sample.json.deserializer.PupilDeserializer;
@@ -34,6 +31,10 @@ public class Main extends Application {
 
     public static String importExportScreenID = "ImportExport";
     public static String importExportScreenFile = "ImportExport.fxml";
+
+
+    public static String analyticsScreenID = "Analytics";
+    public static String analyticsScreenFile = "AnalyticsPage.fxml";
 
     public static ArrayList<SchoolClass> schoolClassArrayList;
     public static ArrayList<Pupil> pupils;
@@ -143,25 +144,19 @@ public class Main extends Application {
         ClassSubjectsImporter classSubjectsImporter = new ClassSubjectsImporter();
         classSubjectsImporter.importTemplate("res\\Учебные предметы.xls");
 
-
         for(Subject oneSubject : Main.schoolClassArrayList.get(0).getClassSubjects())
             System.out.println(oneSubject.getSubjectName());
-
-
-
 
         for(Pupil onePupil : Main.pupils)
             onePupil.printPerson();
 
         classGradesImporter.importTemplate("res\\Отметки\\1Б.xls", "res\\Расписание.xls", 1);
 
-
-
-
         ScreensController mainContainer = new ScreensController();
         mainContainer.loadScreen(mainScreenID, mainScreenFile);
         mainContainer.loadScreen(classListScreenID, classListScreenFile);
         mainContainer.loadScreen(importExportScreenID, importExportScreenFile);
+        mainContainer.loadScreen(analyticsScreenID, analyticsScreenFile);
         mainContainer.setScreen(mainScreenID);
 
         Group root = new Group();
@@ -171,6 +166,10 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Программное средство учета успеваемости учащихся");
         primaryStage.show();
+
+
+        for(Subject oneSubject : Main.schoolSubjects)
+            System.out.println(oneSubject.getSubjectName());
     }
 
 

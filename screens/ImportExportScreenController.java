@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -18,9 +19,7 @@ import sample.excel.TeachersImporter;
 import sample.json.deserializer.TeacherDeserializer;
 import sample.objects.Grade;
 import sample.objects.Teacher;
-import sample.popups.AlertWarner;
-import sample.popups.GradePopup;
-import sample.popups.ServerUpdatePopup;
+import sample.popups.*;
 
 import java.io.File;
 import java.net.URL;
@@ -156,6 +155,18 @@ public class ImportExportScreenController implements Initializable, ControlledSc
 
     }
 
+    private String getSelectedDirectory(String dialogTitle) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle(dialogTitle);
+        File selectedDir = directoryChooser.showDialog(null);
+        if(selectedDir != null)
+            return selectedDir.getAbsolutePath();
+        else
+            return "";
+
+
+    }
+
     public void onImportPupilsButtonClicked() {
         ClassPupilsImporter classPupilsImporter = new ClassPupilsImporter();
         String absolutePath = getSelectedFilePath("Выберите файл с информацией об обучающихся");
@@ -222,5 +233,22 @@ public class ImportExportScreenController implements Initializable, ControlledSc
         ServerUpdatePopup.customPopup.show(Window.getWindows().get(0));
     }
 
+    public void onGradesExportButtonClicked() {
+        String absolutePath = getSelectedDirectory("Выберите место для экспорта");
+        if(!absolutePath.isEmpty()) {
+            ClassGradesPopup classGradesPopup = new ClassGradesPopup();
+            classGradesPopup.generateLayout(absolutePath);
+            ClassGradesPopup.customPopup.show(Window.getWindows().get(0));
+        }
+    }
+
+    public void onClassPupilsExportButtonClicked() {
+        String absolutePath = getSelectedDirectory("Выберите место для экспорта");
+        if(!absolutePath.isEmpty()) {
+            ClassPupilsPopup classPupilsPopup = new ClassPupilsPopup();
+            classPupilsPopup.generateLayout(absolutePath);
+            ClassPupilsPopup.customPopup.show(Window.getWindows().get(0));
+        }
+    }
 
 }

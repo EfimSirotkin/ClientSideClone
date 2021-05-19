@@ -16,6 +16,7 @@ public class GetGenerator extends RequestGenerator{
     private final String getGrades = "get-grades";
     private final String getSchoolClasses = "get-schoolclasses";
     private final String getSubjects = "get-subjects";
+    private final String getAuthData = "get-authentication";
 
     public GetGenerator(HttpRequest customRequest) {
         request = customRequest;
@@ -54,6 +55,13 @@ public class GetGenerator extends RequestGenerator{
     public String querySubjects() {
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://" + serverIPport + "/" + getSubjects))
+                .build();
+        return getResponseResults();
+    }
+
+    public String queryAuthentication() {
+        request = HttpRequest.newBuilder()
+                .uri((URI.create("http://" + serverIPport + "/" + getAuthData)))
                 .build();
         return getResponseResults();
     }

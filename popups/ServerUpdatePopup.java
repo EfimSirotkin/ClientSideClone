@@ -2,7 +2,6 @@ package sample.popups;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import sample.Main;
@@ -15,11 +14,11 @@ import sample.json.serializer.TeacherSerializer;
 public class ServerUpdatePopup {
 
     public static Popup customPopup;
-    private RadioButton[] radioButtons;
+    private Button[] Buttons;
 
     public ServerUpdatePopup() {
         customPopup = new Popup();
-        radioButtons = new RadioButton[5];
+        Buttons = new Button[5];
 
     }
 
@@ -30,50 +29,55 @@ public class ServerUpdatePopup {
         Label instructionsLabel = new Label("Выберите категорию объектов:");
         instructionsLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         Button applyButton = new Button("Окей");
-        Button cancelButton = new Button("Выход");
         applyButton.setStyle("-fx-background-color: #80DC94; -fx-font-size: 20px; -fx-font-weight: bold;");
-        cancelButton.setStyle("-fx-background-color: #e3756d; -fx-font-size: 20px; -fx-font-weight: bold;");
-        applyButton.setMinWidth(130);
-        cancelButton.setMinWidth(130);
+        applyButton.setMinWidth(280);
 
-        radioButtons[0] = new RadioButton("Обновить учащихся(включая отметки)");
-        radioButtons[1] = new RadioButton("Обновить учителей");
-        radioButtons[2] = new RadioButton("Обновить учебные предметы");
-        radioButtons[3] = new RadioButton("Обновить учебные классы");
-        radioButtons[4] = new RadioButton("Обновите все");
+        Buttons[0] = new Button("Обновить учащихся(включая отметки)");
+        Buttons[1] = new Button("Обновить учителей");
+        Buttons[2] = new Button("Обновить учебные предметы");
+        Buttons[3] = new Button("Обновить учебные классы");
+        Buttons[4] = new Button("Обновите все");
+
+        for(int i = 0;i < Buttons.length; ++i)
+            Buttons[i].setStyle("-fx-font-size: 14px;");
 
         PostGenerator postGenerator = new PostGenerator();
         final String[] responseResult = {""};
 
-        for (int i = 0; i < radioButtons.length; ++i) {
-            radioButtons[i].setToggleGroup(toggleGroup);
-        }
 
-        radioButtons[0].setOnAction(actionEvent -> {
+        Buttons[0].setOnAction(actionEvent -> {
             PupilSerializer pupilSerializer = new PupilSerializer();
             responseResult[0] = postGenerator.postPupils(pupilSerializer.serialize(Main.pupils));
             showAlert(responseResult[0]);
+            Buttons[0].setText("Обновить учащихся(включая отметки) - Обновлено");
+            Buttons[0].setDisable(true);
         });
 
-        radioButtons[1].setOnAction(actionEvent -> {
+        Buttons[1].setOnAction(actionEvent -> {
             TeacherSerializer teacherSerializer = new TeacherSerializer();
             responseResult[0] = postGenerator.postTeachers(teacherSerializer.serialize(Main.teachers));
             showAlert(responseResult[0]);
+            Buttons[1].setText("Обновить учителей - Обновлено");
+            Buttons[1].setDisable(true);
         });
 
-        radioButtons[2].setOnAction(actionEvent -> {
+        Buttons[2].setOnAction(actionEvent -> {
             SchoolSubjectsSeralizer schoolSubjectsSeralizer = new SchoolSubjectsSeralizer();
             responseResult[0] = postGenerator.postSubjects(schoolSubjectsSeralizer.serialize(Main.schoolSubjects));
             showAlert(responseResult[0]);
+            Buttons[2].setText("Обновить учебные предметы - Обновлено");
+            Buttons[2].setDisable(true);
         });
 
-        radioButtons[3].setOnAction(actionEvent -> {
+        Buttons[3].setOnAction(actionEvent -> {
             SchoolClassSerializer schoolClassSerializer = new SchoolClassSerializer();
             responseResult[0] = postGenerator.postSchoolClasses(schoolClassSerializer.serialize(Main.schoolClassArrayList));
             showAlert(responseResult[0]);
+            Buttons[3].setText("Обновить учебные классы - Обновлено");
+            Buttons[3].setDisable(true);
         });
 
-        radioButtons[4].setOnAction(actionEvent -> {
+        Buttons[4].setOnAction(actionEvent -> {
             PupilSerializer pupilSerializer = new PupilSerializer();
             postGenerator.postPupils(pupilSerializer.serialize(Main.pupils));
             TeacherSerializer teacherSerializer = new TeacherSerializer();
@@ -83,24 +87,31 @@ public class ServerUpdatePopup {
             SchoolClassSerializer schoolClassSerializer = new SchoolClassSerializer();
             responseResult[0] = postGenerator.postSchoolClasses(schoolClassSerializer.serialize(Main.schoolClassArrayList));
             showAlert(responseResult[0]);
+            Buttons[0].setText("Обновить учащихся(включая отметки) - Обновлено");
+            Buttons[0].setDisable(true);
+            Buttons[1].setText("Обновить учителей - Обновлено");
+            Buttons[1].setDisable(true);
+            Buttons[2].setText("Обновить учебные предметы - Обновлено");
+            Buttons[2].setDisable(true);
+            Buttons[3].setText("Обновить учебные классы - Обновлено");
+            Buttons[3].setDisable(true);
+            Buttons[4].setText("Обновить все - Обновлено");
+            Buttons[4].setDisable(true);
         });
 
+        applyButton.setOnAction(actionEvent -> customPopup.hide());
 
-        cancelButton.setOnAction(actionEvent -> customPopup.hide());
-
-        HBox instructionButtonsHbox = new HBox(10);
-        instructionButtonsHbox.getChildren().addAll(applyButton, cancelButton);
         radioButtonsVBox.getChildren().add(instructionsLabel);
-        radioButtonsVBox.getChildren().addAll(radioButtons);
-        radioButtonsVBox.getChildren().add(instructionButtonsHbox);
+        radioButtonsVBox.getChildren().addAll(Buttons);
+        radioButtonsVBox.getChildren().add(applyButton);
 
         radioButtonsVBox.setPadding(new Insets(10, 10, 0, 10));
         radioButtonsVBox.setStyle("-fx-background-color: white;  -fx-border-width: 1; -fx-border-radius: 2; -fx-border-color: black;");
-        radioButtonsVBox.setMinHeight(250);
+        radioButtonsVBox.setMinHeight(320);
         radioButtonsVBox.setMinWidth(300);
 
         customPopup.getContent().add(radioButtonsVBox);
-        customPopup.setHeight(500);
+        customPopup.setHeight(560);
         customPopup.setWidth(1600);
         customPopup.setX(350);
         customPopup.setY(650);
@@ -108,7 +119,7 @@ public class ServerUpdatePopup {
     }
 
     public void showAlert(String condition) {
-        if (condition.equals("Ok")) {
+        if (condition.equals("OK")) {
             AlertWarner.showAlert("Успешно", "Информация успешно отправлена сереверу и обработана.", "Соответствующие записи обновлены", Alert.AlertType.INFORMATION);
         } else {
             AlertWarner.showAlert("Ошибка", "В процессе пересылки произошел сбой", "Соответствующие записи не обновлены", Alert.AlertType.ERROR);
